@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>자취요리</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css" integrity="sha512-5Hs3dF2AEPkpNAR7UiOHba+lRSJNeM2ECkwxUIxC1Q/FLycGTbNapWXB4tP889k5T5Ju8fs4b1P5z/iB4nMfSQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        :root {
+            --primary-color: #FF6B6B;
+            --secondary-color: #FF6B6B;
+            --background-color: #f8f9fa;
+            --text-color: #343a40;
+        }
+
+        * {
+            font-family: BMJUA;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .recipe-header {
+            display: flex; /* 제목과 이미지를 가로로 정렬 */
+            align-items: center; /* 이미지와 텍스트를 세로로 정렬 */
+            background-color: white;
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .recipe-title {
+            text-align: center;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .recipe-header, .recipe-section {
+            max-width: 800px; /* 섹션 너비를 고정 */
+            margin: 0 auto 1.5rem; /* 각 섹션을 가운데로 정렬하고 아래쪽 여백 추가 */
+        }
+
+        .recipe-info {
+            display: flex;
+            width: 620px;
+            gap: 2rem;
+            margin-bottom: 1rem;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .recipe-info span {
+            width: 200px;
+        }
+
+        .recipe-info i {
+            margin-right: 0.5rem;
+            color: var(--secondary-color);
+        }
+
+        .recipe-section {
+            background-color: white;
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--secondary-color);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .section-content {
+            background-color: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-top: 1rem;
+            min-height: 80px;
+        }
+
+        .ingredient-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .sauceingredient-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .ingredient-item {
+            text-align: center;
+            background-color: white;
+            padding: 0.8rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .sauceingredient-item {
+            text-align: center;
+            background-color: white;
+            padding: 0.8rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .step-number {
+            background-color: var(--primary-color);
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .cooking-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .recipeExplanation{
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .step-item {
+            background-color: white;
+            padding: 1rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .recipe-img {
+            border-radius: 10px;
+            width: 110px;
+            height: 110px;
+        }
+
+        html::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        html::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        html::-webkit-scrollbar-thumb {
+            background: #ff6666;
+            border-radius: 10px;
+        }
+
+        html::-webkit-scrollbar-thumb:hover {
+            background: #cc3333;
+        }
+
+        body.dark-mode {
+            background-color: #1E1E1E;
+            color: #E0E0E0;
+        }
+
+        body.dark-mode .recipe-header {
+            background-color: #2C2C2C;
+            box-shadow: 0 0 10px rgba(255,255,255,0.1);
+        }
+
+        body.dark-mode .recipe-section {
+            background-color: #2C2C2C;
+            box-shadow: 0 0 10px rgba(255,255,255,0.1);
+        }
+
+        body.dark-mode .section-content {
+            background-color: #2C2C2C;
+            box-shadow: 0 0 10px rgba(255,255,255,0.1);
+        }
+
+        body.dark-mode .ingredient-item {
+            background-color: #2C2C2C;
+            box-shadow: none;
+        }
+
+        body.dark-mode .sauceingredient-item {
+            background-color: #2C2C2C;
+            box-shadow: none;
+        }
+
+        body.dark-mode .step-item {
+            background-color: #2C2C2C;
+            box-shadow: none;
+        }   
+
+        .arrow {
+            width: 50px;
+            padding: 20px;
+        }
+    </style>
+    <style>
+        @font-face {
+            font-family: 'BMJUA';
+            src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_one@1.0/BMJUA.woff') format('woff');
+            font-weight: normal;
+            font-style: normal;
+        }
+    </style>
+</head>
+<body>
+    <h1 class="arrow" id="arrow">↩</h1>
+    <div class="recipe-header">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <h1 class="recipe-title">맛있는 요리 레시피</h1>
+                <div class="recipe-info">
+                    <i class="fas fa-user"></i><span id="nickname"></span>
+                    <i class="fas fa-clock"></i><span id="date"></span>
+                </div>
+            </div>
+            <div id="recipeImg"></div>
+        </div>
+    </div>
+
+        <div class="recipe-section">
+            <h2 class="section-title">
+                <i class="fas fa-comment"></i>
+                요리 설명
+            </h2>
+            <div class="section-content recipeExplanation">
+                
+            </div>
+        </div>
+
+        
+        <div class="recipe-section">
+            <h2 class="section-title">
+                <i class="fas fa-list-check"></i>
+                준비 재료
+            </h2>
+            <div class="section-content ingredient-list"></div>
+        </div>
+
+        <div class="recipe-section">
+            <h2 class="section-title">
+                <i class="fas fa-mortar-pestle"></i>
+                양념장 준비
+            </h2>
+            <div class="section-content sauceingredient-list"></div>
+        </div>
+        
+        <div class="recipe-section">
+            <h2 class="section-title">
+                <i class="fas fa-fire"></i>
+                준비하기
+            </h2>
+            <div class="section-content cooking-steps"></div>
+        </div>
+    </div>
+        
+
+    <script>
+        if (localStorage.getItem('darkMode') === 'true') {
+          document.body.classList.add('dark-mode');
+        }
+    </script>
+    
+    <script type="module" src="script.js"></script>
+    
+    <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-storage.js"></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>  
+    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="crossorigin="anonymous"></script> 
+
+
+    <script>
+
+const firebaseConfig = {
+      apiKey: "your-api-key",
+      authDomain: "your-api-key",
+      projectId: "your-api-key",
+      storageBucket: "your-api-key",
+      messagingSenderId: "your-api-key",
+      appId: "your-api-key"
+    };
+    firebase.initializeApp(firebaseConfig);
+
+
+    const db = firebase.firestore();
+    const storage = firebase.storage();
+
+    var detailUrl = new URLSearchParams(window.location.search)
+
+    db.collection('foods').doc(detailUrl.get('id')).get().then((result) => {
+        const data = result.data();
+
+        console.log(data)
+        $('.recipe-title').html(result.data().name)
+        $('#nickname').html(result.data().username)
+        $('#date').html(result.data().date)
+
+        const foodImage = `<img src="${data.image}" alt="${data.name}" class="recipe-img">`
+        $('#recipeImg').append(foodImage);
+
+        data.explanation.forEach((Explanation) => {
+            const recipeExplanation = `<p class="recipe-explanation">${Explanation}</p>`;
+            $('.recipeExplanation').append(recipeExplanation);
+        });
+
+        data.ingredients.forEach((ingredient) => {
+            const ingredientItem = `<div class="ingredient-item">${ingredient}</div>`;
+            $('.ingredient-list').append(ingredientItem);
+        });
+
+        data.sauceIngredients.forEach((sauce) => {
+            const ingredientItem = `<div class="sauceingredient-item">${sauce}</div>`;
+            $('.sauceingredient-list').append(ingredientItem);
+        });
+        
+        var num = 1
+        data.preparation.forEach((preparation) => {
+            const preparationDiv = `<div class="step-item"><span class="step-number">${num++}</span>${preparation}</div>`;
+            $('.cooking-steps').append(preparationDiv);
+        });
+
+        data.cooking.forEach((cooking) => {
+            const cookingDiv = `<div class="step-item"><span class="step-number">${num++}</span>${cooking}</div>`;
+            $('.cooking-steps').append(cookingDiv);
+        });
+    })
+
+
+
+    $('#arrow').click(function(){
+        window.history.back();
+    })
+    </script>
+</body>
+</html>

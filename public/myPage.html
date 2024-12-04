@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>내 페이지</title>
+  <style>
+*{
+  font-family: BMJUA;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #f9f9f9;
+}
+
+.container {
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 10px;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+header h1 {
+  font-family: BMJUA;
+  font-size: 24px;
+  color: #333;
+}
+
+.back-btn {
+  background-color: #ff6666;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
+}
+
+.back-btn:hover {
+  background-color: #cc3333;
+}
+
+/* 레시피 리스트 */
+.recipe-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 15px;
+}
+
+/* 레시피 카드 */
+.recipe-card {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  position: relative;
+  overflow: visible;
+  transition: transform 0.3s ease;
+} 
+
+.recipe-card:hover {
+  transform: translateY(-5px);
+  z-index: 100;
+}
+
+.recipe-card img {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+}
+
+.recipe-card .recipe-content {
+  padding: 10px;
+  text-align: center;
+}
+
+.recipe-content {
+    position: relative;
+}
+
+.recipe-card h2 {
+  font-size: 18px;
+  color: #333;
+  margin: 10px 0;
+}
+
+.recipe-card p {
+  font-size: 14px;
+  color: #777;
+}
+
+.dropdown-btn {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: #777;
+  position: absolute;
+  top: 15px;
+  right: 10px;
+  vertical-align: middle;
+}
+
+/* 드롭다운 메뉴 스타일 */
+.dropdown-menu {
+  display: none; /* 기본적으로 숨김 */
+  position: absolute;
+  left: 76.5%;
+  bottom: -9%;
+  background: white;
+  border-radius: 5px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  min-width: 61px;
+}
+
+/* 드롭다운 메뉴 항목 스타일 */
+.dropdown-item {
+  padding: 8px 4px;
+  border-radius: 5px;
+  text-align: center;
+  background: white;
+  border: none;
+  width: 100%;
+  cursor: pointer;
+}
+
+.dropdown-item:hover {
+  background: #e6e5e5;
+}
+
+.delete-btn {
+  background-color: red;
+  transition: all 0.1s;
+}
+
+.delete-btn:hover{
+  background-color: darkred;
+}
+
+/* 드롭다운 메뉴가 보일 때 */
+.show {
+  display: block;
+}
+
+body.dark-mode {
+    background-color: #1E1E1E;
+    color: black;
+}
+
+body.dark-mode header h1 {
+  font-size: 24px;
+  color: white;
+}
+
+body.dark-mode .recipe-list{
+    color: white;
+}
+
+  </style>
+
+<style>
+  @font-face {
+      font-family: 'BMJUA';
+      src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_one@1.0/BMJUA.woff') format('woff');
+      font-weight: normal;
+      font-style: normal;
+  }
+</style>
+</head>
+<body>
+    <div class="container">
+        <header>
+          <h1>내 레시피</h1>
+          <button id="back-button" class="back-btn">← 뒤로가기</button>
+        </header>
+        <main>
+          <div id="recipe-list" class="recipe-list">
+            <!-- 레시피 카드가 여기에 동적으로 추가됩니다 -->
+          </div>
+        </main>
+      </div>
+
+<script>
+    if (localStorage.getItem('darkMode') === 'true') {
+      document.body.classList.add('dark-mode');
+    }
+</script>
+
+<script type="module" src="script.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-firestore.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-storage.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>  
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="crossorigin="anonymous"></script> 
+
+<script>
+
+const firebaseConfig = {
+      apiKey: "your-api-key",
+      authDomain: "your-api-key",
+      projectId: "your-api-key",
+      storageBucket: "your-api-key",
+      messagingSenderId: "your-api-key",
+      appId: "your-api-key"
+    };
+    firebase.initializeApp(firebaseConfig);
+
+
+    const db = firebase.firestore();
+    const storage = firebase.storage();
+    const auth = firebase.auth();
+
+    const recipeList = document.getElementById('recipe-list');
+
+    // 현재 로그인한 사용자의 레시피 가져오기
+    auth.onAuthStateChanged(user => {
+    if (user) {
+        const userId = user.uid;
+
+        db.collection('foods')
+            .where('uid', '==', userId)
+            .get()
+            .then(snapshot => {
+                if (snapshot.empty) {
+                    recipeList.innerHTML = '<p>추가한 레시피가 없습니다.</p>';
+                } else {
+                    snapshot.forEach(doc => {
+                        const recipe = doc.data();
+                        const recipeId = doc.id; // 각 문서의 고유 ID
+                        const card = document.createElement('div');
+                        card.className = 'recipe-card';
+
+                        card.innerHTML = `
+                        <img src="${recipe.image || 'default-recipe.jpg'}" alt="${recipe.name}">
+                        <div class="recipe-content">
+                            <h2>
+                                ${recipe.name}
+                                <button class="dropdown-btn">⋯</button>
+                                <div class="dropdown-menu">
+                                    <button class="dropdown-item edit-btn" data-id="${recipeId}">수정</button>
+                                    <button class="dropdown-item delete-btn" data-id="${recipeId}">삭제</button>
+                                </div>
+                            </h2>
+                            <p>${recipe.category}</p>
+                        </div>
+                    `;
+
+                        recipeList.appendChild(card);
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('레시피를 불러오는 중 오류 발생:', error);
+            });
+    } else {
+        window.location.href = './signin.html'; // 로그인 페이지로 리디렉션
+    }
+});
+
+$(document).on('click', '.edit-btn', function() {
+    const recipeId = $(this).data('id'); // data-id에서 ID 가져오기
+    if (recipeId) {
+        window.location.href = `./edit.html?id=${recipeId}`;
+    }
+});
+
+
+
+    // 뒤로가기 버튼 기능
+    document.getElementById('back-button').addEventListener('click', () => {
+      window.location.href = './index.html';
+    });
+
+  // 수정된 코드
+  $(document).on('click', '.dropdown-btn', function(e) {
+    e.stopPropagation(); // 이벤트 버블링 방지
+    // 다른 열린 메뉴들 먼저 닫기
+    $('.dropdown-menu.show').not($(this).siblings('.dropdown-menu')).removeClass('show');
+    // 현재 클릭된 버튼의 메뉴 토글
+    $(this).siblings('.dropdown-menu').toggleClass('show');
+  });
+
+  // 문서 클릭시 메뉴 닫기
+  $(document).on('click', function(e) {
+    if (!$(e.target).closest('.dropdown-menu').length) {
+      $('.dropdown-menu.show').removeClass('show');
+    }
+  });
+
+$(document).on('click', '.delete-btn', function (e) {
+    e.stopPropagation();
+    const recipeId = $(this).data('id'); // data-id 속성에서 ID 가져오기
+    if (recipeId && confirm('정말로 이 레시피를 삭제하시겠습니까?')) {
+        db.collection('foods').doc(recipeId).delete()
+            .then(() => {
+                alert('레시피가 삭제되었습니다.');
+                location.reload(); // 삭제 후 페이지 새로고침
+            })
+            .catch(error => {
+                console.error('레시피 삭제 중 오류 발생:', error);
+            });
+    }
+});
+
+</script>
+</body>
+</html>
